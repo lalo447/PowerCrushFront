@@ -1,23 +1,27 @@
-import { Component, Input, signal, OnInit } from '@angular/core';
+import { Component, Input, signal, OnInit, inject } from '@angular/core';
 import { CommonModule, NgFor, SlicePipe } from '@angular/common';
 import { ProductsService } from '../../services/products.service';
-import { Product } from '../../interfaces/Product';
 import { HttpClientModule } from '@angular/common/http';
+import { BoardHeader } from '../board-header/board-header';
+import { AlertDialog } from '../../services/alert.service';
+import { Dialog } from '@angular/cdk/dialog';
 
 @Component({
   selector: 'app-board-power',
   standalone: true,
-  imports: [CommonModule, NgFor, HttpClientModule],
+  imports: [CommonModule, NgFor, HttpClientModule, BoardHeader],
   templateUrl: './board-power.html',
   styleUrls: ['./board-power.css']
 })
 export class BoardPower implements OnInit {
 size = 8;
 board = signal<string[]>([]);
-loading = signal<boolean>(true);
-errorMsg = signal<string | null>(null);
+error = signal<string | null>(null);
+ private dialog = inject(Dialog);
 
-constructor(private productsService: ProductsService) { }
+constructor(
+  private productsService: ProductsService
+) { }
 
 ngOnInit(){
   this.loadProducts();
@@ -28,8 +32,8 @@ private loadProducts(): void{
     next: (products) =>{
       const valid = (products ?? []).filter(p => !!p.imageUrl);
       if (!valid.length){
-        this.errorMsg.set('No products available at the moment.');
-        this.loading.set(false);
+        this.error.set('No products available at the moment.');
+        this.dialog.open(AlertDialog, { data: { title: 'Error', message: 'No products available at the moment.' } });
         return;
       }
 
@@ -43,11 +47,10 @@ private loadProducts(): void{
       }
 
       this.board.set(board);
-      this.loading.set(false);
     },
     error: () =>{
-      this.errorMsg.set('Failed to load products. Please try again later.');
-      this.loading.set(false);
+      this.error.set('Failed to load products. Please try again later.');
+      this.dialog.open(AlertDialog, { data: { title: 'Error', message: 'Failed to load products. Please try again later.' } });
     }
   })
 }

@@ -11,7 +11,6 @@ export class ProductsService {
 private readonly productsUrl = '/products.json';
 
 constructor(private http: HttpClient){ }
-
 getProducts(): Observable<Product[]> {
     return this.http.get<Product[]>(this.productsUrl);
 }

@@ -1,8 +1,6 @@
+<app-board-header></app-board-header>
 <div class="wrap">
-  <div class="status" *ngIf="loading()">Cargando tablero…</div>
-  <div class="status error" *ngIf="!loading() && errorMsg()">{{ errorMsg() }}</div>
-
-  <div class="board" *ngIf="!loading() && !errorMsg()">
+  <div class="board" *ngIf="!error()">
     <div class="cell" *ngFor="let img of board(); let i = index">
       <img [src]="img" alt="product" loading="lazy">
     </div>

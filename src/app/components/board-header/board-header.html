@@ -1,0 +1,20 @@
+<header id="hdr">
+  <h1 id="title">Power Crash</h1>
+
+  <div id="panel">
+    <div id="statPoints">
+      <span id="labelPoints">Points</span>
+      <span id="valuePoints">{{ points() }}</span>
+    </div>
+
+    <div id="statTime">
+      <span id="labelTime">Time</span>
+      <span id="valueTime">{{ timeText() }}</span>
+    </div>
+
+    <div id="actions">
+      <button id="btnStart" (click)="start()" [disabled]="running()">Iniciar</button>
+      <button id="btnReset" (click)="reset()">Reiniciar</button>
+    </div>
+  </div>
+</header>

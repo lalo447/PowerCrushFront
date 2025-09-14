@@ -1,0 +1,77 @@
+#hdr{
+    max-width: 920px;
+    margin: 16px auto 8px;
+    padding: 12px;
+    text-align: center;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+#title{
+    margin: 0 0 10px;
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: .5px;
+}
+
+#panel{
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    grid-auto-flow: column;
+    gap: 18px;
+}
+
+#statPoints, #statTime{
+    background: #111;
+    color: #fff;
+    padding: 10px 14px;
+    border-radius: 14px;
+    min-width: 120px;
+    box-shadow: 0 6px 18px rgba(0,0,0,.15);
+}
+
+#labelPoints, #labelTime{
+   display: block;
+   font-size: 15px;
+   opacity: .75;
+   margin-bottom: 4px;
+}
+
+#valuePoints, #valueTime{
+    font-size: 22px;
+    font-weight: 600;
+}
+
+#valueTime{
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+#actions{
+    display: flex;
+    gap: 8px;
+}
+
+#btnStart, #btnReset{
+    border: none;
+    color: #fff;
+    padding: 10px 16px;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 6px;
+    box-shadow: 0 6px 18px rgba(35, 36, 37, 0.3);
+    cursor: pointer;
+}
+
+#btnStart {
+    background: #3b82f6;
+}
+
+#btnReset {
+    background: #e5e7eb;
+    color:#111;
+}
+
+#btnStart:disabled, #btnReset:disabled {
+  opacity: .6;
+  cursor: not-allowed;
+}
