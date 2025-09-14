@@ -1,0 +1,50 @@
+[
+  {
+    "productCode": "334742",
+    "categoryId": 54,
+    "isCompound": false,
+    "imageUrl": "https://ctfhgmakia.cloudimg.io/https://api.powerstar.mx/Content/ProductoImagen/334742_2024_05_21_18_19_10_760.jpg"
+  },
+  {
+    "productCode": "370150",
+    "categoryId": 67,
+    "isCompound": false,
+    "imageUrl": "https://ctfhgmakia.cloudimg.io/https://api.powerstar.mx/Content/ProductoImagen/370150.JPG"
+  },
+  {
+    "productCode": "3453PS",
+    "categoryId": 19,
+    "isCompound": false,
+    "imageUrl": "https://ctfhgmakia.cloudimg.io/https://api.powerstar.mx/Content/ProductoImagen/3453PS_2024_11_20_09_36_20_210.jpg"
+  },
+  {
+    "productCode": "370157",
+    "categoryId": 67,
+    "isCompound": false,
+    "imageUrl": "https://ctfhgmakia.cloudimg.io/https://api.powerstar.mx/Content/ProductoImagen/370157.JPG"
+  },
+  {
+    "productCode": "405",
+    "categoryId": 6,
+    "isCompound": true,
+    "imageUrl": "https://ctfhgmakia.cloudimg.io/https://api.powerstar.mx/Content/ProductoImagen/405.JPG"
+  },
+  {
+    "productCode": "3220APSB",
+    "categoryId": 19,
+    "isCompound": false,
+    "imageUrl": "https://ctfhgmakia.cloudimg.io/https://api.powerstar.mx/Content/ProductoImagen/3220APSB_2025_05_12_12_41_28_617.jpg"
+  },
+  {
+    "productCode": "348353",
+    "categoryId": 30,
+    "isCompound": false,
+    "imageUrl": "https://ctfhgmakia.cloudimg.io/https://api.powerstar.mx/Content/ProductoImagen/348353_2025_04_21_10_54_52_710.jpg"
+  },
+  {
+    "productCode": "8138C",
+    "categoryId": 15,
+    "isCompound": false,
+    "imageUrl": "https://ctfhgmakia.cloudimg.io/https://api.powerstar.mx/Content/ProductoImagen/8138C_2025_04_16_16_43_07_000.jpg"
+  }
+]
