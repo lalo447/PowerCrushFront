@@ -6,53 +6,57 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './board-header.html',
-  styleUrl: './board-header.css'
+  styleUrls: ['./board-header.css']
 })
 export class BoardHeader {
-  points = signal<number>(0);
-  running = signal<boolean>(false);
-  timeMs = signal<number>(0);
+  private readonly durationMs = 60_000;
+
+  points  = signal(0);
+  running = signal(false);
+  timeMs  = signal(this.durationMs);
 
   private timerId?: ReturnType<typeof setInterval>;
-  private startedAt = 0;
+  private endsAt = 0;
 
   timeText = computed(() => {
     const totalSeconds = Math.floor(this.timeMs() / 1000);
-    const minutes = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
-    const seconds = (totalSeconds % 60).toString().padStart(2, '0');
-    return `${minutes}:${seconds}`;
+    const mm = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
+    const ss = (totalSeconds % 60).toString().padStart(2, '0');
+    return `${mm}:${ss}`;
   });
 
-  public addPoints(delta: number):void{
+  addPoints(delta: number) {
     this.points.update(p => p + delta);
   }
 
-  public start(): void{
-    if (this.running())
-      return;
+  start() {
+    if (this.running() || this.timeMs() === 0) return;
+
+    this.timeMs.set(this.durationMs);
+    this.endsAt = Date.now() + this.durationMs;
 
     this.running.set(true);
-    this.startedAt = Date.now() - this.timeMs();
-
     this.timerId = setInterval(() => {
-      this.timeMs.set(Date.now() - this.startedAt);
+      const left = this.endsAt - Date.now();
+      if (left <= 0) {
+        this.timeMs.set(0);
+        this.running.set(false);
+        clearInterval(this.timerId!);
+        this.timerId = undefined;
+        return;
+      }
+      this.timeMs.set(left);
     }, 100);
   }
 
-  public reset(): void{
-    if (this.timerId){
-      clearInterval(this.timerId);
-      this.timerId = undefined;
-    }
-
+  reset() {
+    if (this.timerId) { clearInterval(this.timerId); this.timerId = undefined; }
     this.running.set(false);
-    this.timeMs.set(0);
+    this.timeMs.set(this.durationMs);
     this.points.set(0);
   }
 
-  public ngOnDestroy(): void{
-    if (this.timerId){
-      clearInterval(this.timerId);
-    }
+  ngOnDestroy() {
+    if (this.timerId) clearInterval(this.timerId);
   }
 }
