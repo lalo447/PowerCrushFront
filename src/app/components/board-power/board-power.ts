@@ -30,14 +30,7 @@ ngOnInit(){
 private loadProducts(): void{
   this.productsService.getProducts().subscribe({
     next: (products) =>{
-      const valid = (products ?? []).filter(p => !!p.imageUrl);
-      if (!valid.length){
-        this.error.set('No products available at the moment.');
-        this.dialog.open(AlertDialog, { data: { title: 'Error', message: 'No products available at the moment.' } });
-        return;
-      }
-
-      const pool = valid.map(p => p.imageUrl);
+      const pool = products.map(p => p.imageUrl);
       const total = this.size * this.size;
       const board: string[] = [];
 

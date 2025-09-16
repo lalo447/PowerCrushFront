@@ -1,14 +1,19 @@
-:host{ display:block; }
+:host {
+  display:block;
+}
 
-.game-card{
-  width: min(980px, 50vw);
+.game-card {
+  width: min(950px, 50vw);
   margin: clamp(12px, 3vw, 28px) auto;
   border-radius: 18px;
   background: #fff;
   box-shadow: 0 10px 30px rgba(0,0,0,.18);
 }
 
-.game-card app-board-power{ display:block; margin-inline:auto; }
+.game-card app-board-power{
+  display:block;
+  margin-inline:auto;
+}
 
 .wrap{
   max-width: 600px;

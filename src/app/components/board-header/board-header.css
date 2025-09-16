@@ -23,12 +23,12 @@
 }
 
 #statPoints, #statTime{
-    background: #111;
-    color: #fff;
+    background: #fff;
+    color: #111;
     padding: 10px 14px;
     border-radius: 14px;
     min-width: 120px;
-    box-shadow: 0 6px 18px rgba(0,0,0,.15);
+    box-shadow: 0 6px 18px rgba(0,0,0,.3);
 }
 
 #labelPoints, #labelTime{

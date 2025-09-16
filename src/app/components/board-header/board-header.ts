@@ -30,7 +30,8 @@ export class BoardHeader {
   }
 
   start() {
-    if (this.running() || this.timeMs() === 0) return;
+    if (this.running() || this.timeMs() === 0)
+      return;
 
     this.timeMs.set(this.durationMs);
     this.endsAt = Date.now() + this.durationMs;
@@ -50,13 +51,18 @@ export class BoardHeader {
   }
 
   reset() {
-    if (this.timerId) { clearInterval(this.timerId); this.timerId = undefined; }
+    if (this.timerId) {
+      clearInterval(this.timerId);
+      this.timerId = undefined;
+    }
+
     this.running.set(false);
     this.timeMs.set(this.durationMs);
     this.points.set(0);
   }
 
   ngOnDestroy() {
-    if (this.timerId) clearInterval(this.timerId);
+    if (this.timerId)
+      clearInterval(this.timerId);
   }
 }
