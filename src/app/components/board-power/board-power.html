@@ -2,7 +2,7 @@
 <app-board-header></app-board-header>
 <div class="wrap">
   <div class="board" *ngIf="!error()">
-    <div class="cell" *ngFor="let img of board(); let i = index">
+    <div class="cell" *ngFor="let img of board(); let i = index" (click)="onCellClick(i, img!)">
       <img [src]="img" alt="product" loading="lazy">
     </div>
   </div>
