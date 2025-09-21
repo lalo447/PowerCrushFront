@@ -1,6 +1,5 @@
 <header id="hdr">
   <h1 id="title">Power Crush</h1>
-
   <div id="panel">
     <div id="statPoints">
       <span id="labelPoints">Points</span>
@@ -9,7 +8,7 @@
 
     <div id="statTime">
       <span id="labelTime">Time</span>
-      <span id="valueTime">{{ timeText() }}</span>
+      <span id="valueTime">{{ timeText() | date:'mm:ss':'UTC' }}</span>
     </div>
 
     <div id="actions">

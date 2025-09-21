@@ -1,5 +1,6 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { GameStateService } from '../../services/game-state.service';
 
 @Component({
   selector: 'app-board-header',
@@ -9,60 +10,21 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./board-header.css']
 })
 export class BoardHeader {
-  private readonly durationMs = 60_000;
+  private game = inject(GameStateService);
 
-  points  = signal(0);
-  running = signal(false);
-  timeMs  = signal(this.durationMs);
+  points   = () => this.game.points();
+  running  = () => this.game.running();
+  timeText = () => this.game.timeMs();
 
-  private timerId?: ReturnType<typeof setInterval>;
-  private endsAt = 0;
-
-  timeText = computed(() => {
-    const totalSeconds = Math.floor(this.timeMs() / 1000);
-    const mm = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
-    const ss = (totalSeconds % 60).toString().padStart(2, '0');
-    return `${mm}:${ss}`;
-  });
-
-  addPoints(delta: number) {
-    this.points.update(p => p + delta);
+  public start() {
+    this.game.start();
   }
 
-  start() {
-    if (this.running() || this.timeMs() === 0)
-      return;
-
-    this.timeMs.set(this.durationMs);
-    this.endsAt = Date.now() + this.durationMs;
-
-    this.running.set(true);
-    this.timerId = setInterval(() => {
-      const left = this.endsAt - Date.now();
-      if (left <= 0) {
-        this.timeMs.set(0);
-        this.running.set(false);
-        clearInterval(this.timerId!);
-        this.timerId = undefined;
-        return;
-      }
-      this.timeMs.set(left);
-    }, 100);
-  }
-
-  reset() {
-    if (this.timerId) {
-      clearInterval(this.timerId);
-      this.timerId = undefined;
-    }
-
-    this.running.set(false);
-    this.timeMs.set(this.durationMs);
-    this.points.set(0);
+  public reset() {
+    this.game.reset();
   }
 
   ngOnDestroy() {
-    if (this.timerId)
-      clearInterval(this.timerId);
+    this.game.dispose();
   }
 }

@@ -4,12 +4,13 @@ import { ProductsService } from '../../services/products.service';
 import { HttpClientModule } from '@angular/common/http';
 import { BoardHeader } from '../board-header/board-header';
 import { AlertDialog } from '../../services/alert.service';
-import { Dialog } from '@angular/cdk/dialog';
+import { Dialog, DialogModule } from '@angular/cdk/dialog';
+import { GameStateService } from '../../services/game-state.service';
 
 @Component({
   selector: 'app-board-power',
   standalone: true,
-  imports: [CommonModule, NgFor, HttpClientModule, BoardHeader],
+  imports: [CommonModule, NgFor, HttpClientModule, BoardHeader, DialogModule],
   templateUrl: './board-power.html',
   styleUrls: ['./board-power.css']
 })
@@ -20,6 +21,7 @@ private readonly size = 8;
 private selectedIndex = signal<number | null>(null);
 private lastProbedRuns = signal<number[][] | null>(null);
 private dialog = inject(Dialog);
+private game = inject(GameStateService);
 private pool: string[] = [];
 
 
@@ -29,6 +31,7 @@ constructor(
 
 ngOnInit(){
   this.loadProducts();
+  console.log('BoardPower initialized');
 }
 
 private loadProducts(): void{
@@ -83,7 +86,6 @@ public onCellClick(i: number, img: string): void {
   this.processAfterSeachSameImages(firstIndex, secondIndex, sameImages);
   this.selectedIndex.set(null);
 }
-
 
 private areAdjacent(first: number, second: number): boolean {
   const diferent = Math.abs(first - second);
@@ -188,7 +190,14 @@ private processAfterSeachSameImages(first: number, second: number, sameImages: n
     this.board.set(revertedBoard);
     return;
   }
+
   const toRemove = this.flattenToSet(validateStreaks);
+  const earned = toRemove.size * 10;
+
+  if (this.game.running() && this.game.timeMs() > 0) {
+    this.game.addPoints(earned);
+  }
+
   const afterRemove = [...this.board()];
   toRemove.forEach((i: number) => {
     if (i >= 0 && i < afterRemove.length)
