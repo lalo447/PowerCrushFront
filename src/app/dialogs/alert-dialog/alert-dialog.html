@@ -1,0 +1,14 @@
+<div class="card">
+    <div class="head">
+    <h3>{{ data.title || 'Confirmar' }}</h3>
+    </div>
+    <p class="msg">{{ data.message }}</p>
+    <div class="actions">
+    <button class="btn ok" (click)="ref.close(true)" autofocus>
+        {{ data.acceptText || 'Aceptar' }}
+    </button>
+    <button class="btn cancel" (click)="ref.close(false)">
+        {{ data.cancelText || 'Cancelar' }}
+    </button>
+    </div>
+</div>

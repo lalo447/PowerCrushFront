@@ -1,41 +1,58 @@
 import { Component, Input, signal, OnInit, inject } from '@angular/core';
 import { CommonModule, NgFor, SlicePipe } from '@angular/common';
-import { ProductsService } from '../../services/products.service';
+import { RestfulService } from '../../services/restful.service';
 import { HttpClientModule } from '@angular/common/http';
 import { BoardHeader } from '../board-header/board-header';
-import { AlertDialog } from '../../services/alert.service';
-import { Dialog, DialogModule } from '@angular/cdk/dialog';
+import { AlertService } from '../../services/alert.service';
 import { GameStateService } from '../../services/game-state.service';
+import { environment } from '../../../enviroment.ts/enviroment';
+import { Product } from '../../interfaces/Product';
 
 @Component({
   selector: 'app-board-power',
   standalone: true,
-  imports: [CommonModule, NgFor, HttpClientModule, BoardHeader, DialogModule],
+  imports: [CommonModule, NgFor, HttpClientModule, BoardHeader],
   templateUrl: './board-power.html',
   styleUrls: ['./board-power.css']
 })
 export class BoardPower implements OnInit {
 public error = signal<string | null>(null);
 public board = signal<(string | null)[]>([]);
-private readonly size = 8;
+private readonly size = environment.size;
 private selectedIndex = signal<number | null>(null);
 private lastProbedRuns = signal<number[][] | null>(null);
-private dialog = inject(Dialog);
 private game = inject(GameStateService);
+private alert = inject(AlertService);
 private pool: string[] = [];
-
+public started = signal<boolean>(false);
 
 constructor(
-  private productsService: ProductsService
+  private restfulService: RestfulService
 ) { }
 
+/**
+ * Lifecycle hook that is called after data-bound properties of a directive are initialized.
+ * Here, it is used to load products and set up a subscription to game start changes.
+ */
 ngOnInit(){
   this.loadProducts();
-  console.log('BoardPower initialized');
+  this.game.startChange$.subscribe(started => {
+    this.started.set(started);
+  });
 }
 
+/**
+ * Handles changes to the game's start state.
+ * @param started - A boolean indicating whether the game has started or not.
+ */
+public onStartChange(started: boolean) {
+  this.started.set(started);
+}
+/**
+ * Loads products from the RESTful service and initializes the game board.
+ */
 private loadProducts(): void{
-  this.productsService.getProducts().subscribe({
+  this.restfulService.get<Product>('/products.json').subscribe({
     next: (products) =>{
       const pool = products.map(p => p.imageUrl);
       const total = this.size * this.size;
@@ -59,12 +76,30 @@ private loadProducts(): void{
     },
     error: () =>{
       this.error.set('Failed to load products. Please try again later.');
-      this.dialog.open(AlertDialog, { data: { title: 'Error', message: 'Fallo el cargar productos, favor de volver a intentarlo.' } });
+      this.alert
+          .confirm({
+            title: 'Error',
+            message: 'Fallo el cargar productos, favor de volver a intentarlo.'
+          })
+          .subscribe();
     }
   })
 }
 
+/**
+ * Handles a cell click event.
+ * @param i - The index of the clicked cell.
+ * @param img - The image associated with the clicked cell.
+ */
 public onCellClick(i: number, img: string): void {
+  if (!this.game.isStarted){
+    this.alert.confirm({
+      title: 'Atención',
+      message: 'El juego no ha iniciado, favor de iniciar el juego.'
+  });
+  return;
+  }
+
   const firstIndex = this.selectedIndex();
   if (firstIndex === null) {
     this.selectedIndex.set(i);
@@ -87,6 +122,12 @@ public onCellClick(i: number, img: string): void {
   this.selectedIndex.set(null);
 }
 
+/**
+ * Checks if two indices are adjacent on the game board.
+ * @param first - The first index.
+ * @param second - The second index.
+ * @returns True if the indices are adjacent, false otherwise.
+ */
 private areAdjacent(first: number, second: number): boolean {
   const diferent = Math.abs(first - second);
   if (diferent === this.size)
@@ -100,6 +141,12 @@ private areAdjacent(first: number, second: number): boolean {
   return false;
 }
 
+/**
+ * Exchanges two items in an array.
+ * @param arr - The array in which to exchange items.
+ * @param first - The index of the first item.
+ * @param second - The index of the second item.
+ */
 private exChangeItems(arr: (string | null)[], first: number, second: number): void {
   [arr[first], arr[second]] = [arr[second], arr[first]];
 }
@@ -180,6 +227,12 @@ private findSameImages(cells: (string | null)[]): number[][] {
   return runs;
 }
 
+/**
+ * Processes the game board after searching for matching images.
+ * @param first - The index of the first selected item.
+ * @param second - The index of the second selected item.
+ * @param sameImages - The list of matching image groups.
+ */
 private processAfterSeachSameImages(first: number, second: number, sameImages: number[][]): void {
   const movedSet = new Set([first, second]);
   const validateStreaks = sameImages.filter(sameImage => sameImage.some(idx => movedSet.has(idx)));
@@ -210,6 +263,11 @@ private processAfterSeachSameImages(first: number, second: number, sameImages: n
   this.selectedIndex.set(null);
 }
 
+/**
+ * Flattens an array of arrays into a Set.
+ * @param runs - The array of arrays to flatten.
+ * @returns A Set containing all unique values from the input arrays.
+ */
 private flattenToSet(runs: number[][]): Set<number> {
   const streak = new Set<number>();
   for (const run of runs) {
@@ -219,14 +277,26 @@ private flattenToSet(runs: number[][]): Set<number> {
   return streak;
 }
 
+/**
+ * Collapses and refills the game board array.
+ * @param arr - The game board array to collapse and refill.
+ */
 private collapseAndRefill(arr: (string | null)[]): void {
   if (!arr.length || this.size <= 0){
-    this.dialog.open(AlertDialog, { data: { title: 'Error', message: 'Tamaño del tablero inválido, favor de validar.' } });
+    this.alert.confirm({
+      title: 'Error',
+      message: 'Tamaño del tablero inválido, favor de validar.'
+    })
+    .subscribe();
     return;
   }
 
   if (!this.pool || this.pool.length === 0) {
-    this.dialog.open(AlertDialog, { data: { title: 'Error', message: 'No hay productos disponibles para rellenar el tablero.' } });
+       this.alert.confirm({
+        title: 'Error',
+        message: 'No hay productos disponibles para rellenar el tablero.'
+      })
+    .subscribe();
     return;
   }
 

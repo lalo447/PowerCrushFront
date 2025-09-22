@@ -1,0 +1,14 @@
+<div class="card">
+    <div class="head">
+    <h3>Ingrese su nombre completo</h3>
+    </div>
+    <input type="text" placeholder="Nombre Completo" />
+    <div class="actions">
+    <button class="btn ok" (click)="ref.close(true)" autofocus>
+        {{ data.acceptText || 'Aceptar' }}
+    </button>
+    <button class="btn cancel" (click)="ref.close(false)">
+        {{ data.cancelText || 'Cancelar' }}
+    </button>
+    </div>
+</div>

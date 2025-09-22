@@ -1,4 +1,4 @@
-import { Component, computed, signal, inject } from '@angular/core';
+import { Component, computed, signal, inject, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GameStateService } from '../../services/game-state.service';
 
@@ -16,15 +16,24 @@ export class BoardHeader {
   running  = () => this.game.running();
   timeText = () => this.game.timeMs();
 
+  /**
+   * Event emitted when the game starts.
+   */
   public start() {
     this.game.start();
   }
 
+  /**
+   * Event emitted when the game is reset.
+   */
   public reset() {
     this.game.reset();
   }
 
-  ngOnDestroy() {
+  /**
+   * Event emitted when the component is destroyed.
+   */
+  public ngOnDestroy() {
     this.game.dispose();
   }
 }
