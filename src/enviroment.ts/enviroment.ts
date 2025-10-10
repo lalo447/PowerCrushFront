@@ -3,5 +3,6 @@ export const environment = {
     duration: 90_000,
     durationArrested: 30_000,
     durationBonus: 10_000,
-    pointsPerMatch: 30
+    pointsPerMatch: 30,
+    api: 'https://localhost:7298/api',
 };

@@ -1,21 +1,56 @@
-import { Injectable } from "@angular/core";
-import { HttpClient, HttpParams } from "@angular/common/http";
-import { Observable } from "rxjs";
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { environment } from '../../enviroment.ts/enviroment';
+import { Observable } from 'rxjs';
+import { Injectable } from '@angular/core';
 
-@Injectable({
-    providedIn: 'root'
-})
+type HttpOptions = {
+  headers?: HttpHeaders;
+  params?: HttpParams;
+};
 
+@Injectable({ providedIn: 'root' })
 export class RestfulService {
-
-constructor(private http: HttpClient){ }
+  constructor(private http: HttpClient) {}
+  private apiUrl = environment.api;
+  /**
+   * Performs a GET request.
+   * @param url The URL to send the request to.
+   * @param options Optional HTTP options such as headers and params.
+   * @returns An Observable of the response body typed as TResponse.
+   */
+  get<TResponse>(url: string, options?: HttpOptions): Observable<TResponse> {
+    return this.http.get<TResponse>(`${this.apiUrl}/${url}`, options);
+  }
 
   /**
-   * Fetches data from a REST API endpoint.
-   * @param url - The endpoint URL to fetch data from.
-   * @returns An observable that emits the fetched data.
+   * Performs a POST request.
+   * @param url The URL to send the request to.
+   * @param body The body of the request.
+   * @param options Optional HTTP options such as headers and params.
+   * @returns An Observable of the response body typed as TResponse.
    */
-   public get<T>(url: string): Observable<T[]> {
-    return this.http.get<T[]>(url);
+  post<TResponse, TBody = unknown>(url: string, body: TBody, options?: HttpOptions): Observable<TResponse> {
+    return this.http.post<TResponse>(`${this.apiUrl}/${url}`, body, options);
+  }
+
+  /**
+   * Performs a PUT request.
+   * @param url The URL to send the request to.
+   * @param body The body of the request.
+   * @param options Optional HTTP options such as headers and params.
+   * @returns An Observable of the response body typed as TResponse.
+   */
+  put<TResponse, TBody = unknown>(url: string, body: TBody, options?: HttpOptions): Observable<TResponse> {
+    return this.http.put<TResponse>(`${this.apiUrl}/${url}`, body, options);
+  }
+
+  /**
+   * Performs a DELETE request.
+   * @param url The URL to send the request to.
+   * @param options Optional HTTP options such as headers and params.
+   * @returns An Observable of the response body typed as TResponse.
+   */
+  delete<TResponse>(url: string, options?: HttpOptions): Observable<TResponse> {
+    return this.http.delete<TResponse>(`${this.apiUrl}/${url}`, options);
   }
 }

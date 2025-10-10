@@ -1,7 +1,7 @@
 import { Component, Input, signal, OnInit, inject } from '@angular/core';
 import { CommonModule, NgFor, SlicePipe } from '@angular/common';
 import { RestfulService } from '../../services/restful.service';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
 import { BoardHeader } from '../board-header/board-header';
 import { AlertService } from '../../services/alert.service';
 import { GameStateService } from '../../services/game-state.service';
@@ -23,11 +23,11 @@ private selectedIndex = signal<number | null>(null);
 private lastProbedRuns = signal<number[][] | null>(null);
 private game = inject(GameStateService);
 private alert = inject(AlertService);
+private restfulService = inject(RestfulService);
 private pool: string[] = [];
 public started = signal<boolean>(false);
 
 constructor(
-  private restfulService: RestfulService
 ) { }
 
 /**
@@ -52,7 +52,7 @@ public onStartChange(started: boolean) {
  * Loads products from the RESTful service and initializes the game board.
  */
 private loadProducts(): void{
-  this.restfulService.get<Product>('/products.json').subscribe({
+  this.restfulService.get<Product[]>('products').subscribe({
     next: (products) =>{
       const pool = products.map(p => p.imageUrl);
       const total = this.size * this.size;
@@ -74,12 +74,23 @@ private loadProducts(): void{
 
        this.pool = boardGenerate;
     },
-    error: () =>{
+    error: (err: HttpErrorResponse) =>{
+      const apiError = (err?.error ?? {}) as { code?: string; message?: string };
       this.error.set('Failed to load products. Please try again later.');
+
+      switch (apiError.code) {
+          case 'NotFound':
+            this.error.set('No se encontraron productos.');
+            break;
+          default:
+            this.error.set(apiError.message ?? 'Ocurrió un error desconocido.');
+            break;
+        }
+
       this.alert
           .confirm({
             title: 'Error',
-            message: 'Fallo el cargar productos, favor de volver a intentarlo.'
+            message: this.error() ?? 'Ocurrió un error desconocido.',
           })
           .subscribe();
     }

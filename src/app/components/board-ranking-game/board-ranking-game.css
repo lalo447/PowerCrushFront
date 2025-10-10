@@ -1,11 +1,11 @@
-.board-ranking-game.page{
+.board-ranking-game.page {
   min-height: 100dvh;
   display: grid;
   place-items: center;
   padding: 24px;
 }
 
-.card{
+.card {
   width: min(800px, 92vw);
   min-height: clamp(480px, 70vh, 800px);
   background: #fff;
@@ -16,16 +16,19 @@
   align-content: start;
 }
 
-.card-header{
+.card-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
 }
 
-.card-header h2{ margin: 0; }
+.card-header h2 {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 
-.btn{
+.btn {
   appearance:none;
   border:0;
   border-radius:12px;
@@ -34,11 +37,78 @@
   cursor:pointer;
   transition:transform .05s ease, box-shadow .2s ease, background-color .2s ease;
 }
-.btn-primary{
+
+.btn-primary {
   background:#2563eb;
   color:#fff;
   box-shadow:0 10px 22px rgba(37,99,235,.30);
 }
+
+.ranking-simple {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 20px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.text-muted{
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 20px;
+}
+
+.row-item {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  padding: .5rem .75rem;
+  border-bottom: 1px solid #eee;
+}
+
+.row-item:last-child {
+  border-bottom: none;
+}
+
+.pos {
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: #f3f4f6;
+  color: #374151;
+  font-weight: 600;
+  font-size: .9rem;
+}
+
+.name {
+  flex: 1;
+  font-weight: 600;
+  color: #111827;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.score {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.ranking-simple .row-item:nth-child(1) .pos {
+  background: #fff3c4;
+}
+
+.ranking-simple .row-item:nth-child(2) .pos {
+  background: #e9eef3;
+  color: #1f2937;
+}
+
+.ranking-simple .row-item:nth-child(3) .pos {
+  background: #fde7d9;
+}
+
 .btn-primary:hover{ background:#1d4ed8; }
 .btn-primary:active{ transform:translateY(1px); }
 

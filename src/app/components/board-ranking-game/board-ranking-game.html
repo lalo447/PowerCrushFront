@@ -1,13 +1,27 @@
 <div class="board-ranking-game page">
   <div class="card">
     <div class="card-header">
-      <div class="heading">
-        <h2>Board Ranking Game</h2>
-      </div>
-
+      <div class="heading"><h2>Board Ranking Game</h2></div>
       <button type="button" class="btn btn-primary" [routerLink]="['/board-power']">
         Ir a Power Crush Game
       </button>
     </div>
+    <br/><br/>
+    <div class="card-body">
+    <ng-container *ngIf="players.length; else noPlayers">
+      <ul class="ranking-simple">
+        <li class="row-item" *ngFor="let p of players; let i = index">
+          <span class="pos">{{ i + 1 }}</span>
+          <span class="name" title="{{ p.name }}">{{ p.name }}</span>
+          <span class="score">{{ p.points | number:'1.0-0' }}</span>
+        </li>
+      </ul>
+    </ng-container>
+
+    <ng-template #noPlayers>
+      <div class="text-muted">No hay jugadores por mostrar.</div>
+    </ng-template>
+  </div>
+
   </div>
 </div>
