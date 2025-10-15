@@ -2,9 +2,10 @@
   <div class="head">
     <h3>Ingrese su nombre completo</h3>
   </div>
-  <input type="text" placeholder="Nombre Completo" [(ngModel)]="name" [disabled]="loading"/>
+  <input type="text" placeholder="Nombre del Jugador" [(ngModel)]="name" [disabled]="loading" maxlength="30"/>
   <br/>
-  <div *ngIf="errorMsg" class="error">{{ errorMsg }}</div>
+  <br/>
+  <div *ngIf="errorMsg" class="error" style="color: red;">{{ errorMsg }}</div>
 
   <div class="actions">
     <button class="btn ok" (click)="onAccept()" [disabled]="loading" autofocus>

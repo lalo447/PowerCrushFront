@@ -43,6 +43,7 @@ export class AlertPlayerName {
       next: player => {
           this.ref.close(true);
           this.router.navigate(['']);
+          this.game.reset();
       },
       error: (err: HttpErrorResponse) =>
       {
@@ -65,5 +66,7 @@ export class AlertPlayerName {
    */
   public onCancel(): void {
     this.ref.close(false);
+    this.router.navigate(['']);
+    this.game.reset();
   }
 }

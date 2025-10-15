@@ -22,6 +22,6 @@ export class AlertService {
    * @returns An observable that emits the user's response.
    */
   public playerName(data: { acceptText?: string; cancelText?: string }) {
-    return this.dialog.open<boolean>(AlertPlayerName, { data }).closed;
+    return this.dialog.open<boolean>(AlertPlayerName, { data, disableClose: true }).closed;
   }
 }
