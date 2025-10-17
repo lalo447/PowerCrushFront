@@ -52,7 +52,7 @@ public onStartChange(started: boolean) {
  * Loads products from the RESTful service and initializes the game board.
  */
 private loadProducts(): void{
-  this.restfulService.get<Product[]>('products').subscribe({
+  this.restfulService.get<Product[]>('products/random').subscribe({
     next: (products) =>{
       const pool = products.map(p => p.imageUrl);
       const total = this.size * this.size;
